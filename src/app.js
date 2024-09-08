@@ -27,6 +27,7 @@ init();
 app.get("/users", async (_, res) => {
   try {
     const result = await pool.query("SELECT * FROM USERS");
+    console.log(result);
     return res
       .status(200)
       .json({ message: "Api requests!", users: result.rows });
