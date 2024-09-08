@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import { users } from "./data.js";
 import pool from "./config/database.js";
 
 dotenv.config();
@@ -26,15 +25,15 @@ const init = async () => {
 init();
 
 app.get("/users", async (_, res) => {
-  return res.status(200).json({ message: "Api requests!", users });
-});
-
-app.get("/products", async (_, res) => {
-  return res.status(200).json({ message: "Api requests!", users });
-});
-
-app.get("/orders", async (_, res) => {
-  return res.status(200).json({ message: "Api requests!", users });
+  try {
+    const result = await pool.query("SELECT * FROM USERS");
+    return res
+      .status(200)
+      .json({ message: "Api requests!", users: result.rows });
+  } catch (error) {
+    console.error("Database query error:", error);
+    return res.status(500).json({ message: "Database query error", error });
+  }
 });
 
 app.listen(3000);
